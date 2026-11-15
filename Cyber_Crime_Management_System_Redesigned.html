@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyber Crime Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b1b2b;--ink2:#12304a;--teal:#0fb5a6;--teal-d:#0a8c80;--amber:#ffb020;
+  --bg:#eef3f7;--card:#fff;--tx:#14263a;--mu:#5f7388;--bd:#dce5ec;
+  --ok:#14a15f;--wa:#d98300;--er:#d6362b;--pr:#1f6fe0;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 'Manrope',system-ui,'Segoe UI',Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #7fe3d9;outline-offset:2px}
+h1,h2,h3{margin:0 0 8px;line-height:1.2}
+h1{font-size:clamp(28px,4.2vw,44px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:21px;font-weight:800}
+h3{font-size:16px;font-weight:700}
+.muted{color:var(--mu);font-size:13.5px}
+.hidden{display:none!important}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:17px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--teal),#0a6e9c);display:grid;place-items:center;font-size:19px}
+.brand small{display:block;font-weight:500;font-size:11.5px;color:#9db4c8;margin-top:-2px}
+
+/* buttons */
+.btn{background:var(--teal);color:#042b27;border:0;padding:11px 18px;border-radius:10px;font-weight:700;transition:transform .15s,background .15s}
+.btn:hover{background:#17c9b9}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:#fff;border:1.5px solid #3b5870}
+.btn.ghost:hover{background:#12304a}
+.btn.secondary{background:#fff;color:var(--tx);border:1.5px solid var(--bd)}
+.btn.secondary:hover{background:#f4f8fb}
+.btn.danger{background:var(--er);color:#fff}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+/* hero */
+.hero{background:radial-gradient(1200px 400px at 85% -20%,#16507a 0%,transparent 60%),var(--ink);color:#fff;padding:54px 28px 100px}
+.hero-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr;gap:36px;align-items:center}
+.hero p{color:#b6c9da;max-width:520px;font-size:16.5px;margin:14px 0 0}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.chip{background:#ffffff14;border:1px solid #ffffff26;border-radius:30px;padding:6px 14px;font-size:13px;font-weight:600;color:#d8e6f2}
+.helpline{background:#ffffff10;border:1px solid #ffffff22;border-radius:var(--r);padding:20px}
+.helpline b{display:block;font-size:44px;color:var(--amber);line-height:1;letter-spacing:-.02em}
+.helpline span{color:#b6c9da;font-size:14px}
+
+/* layout */
+.wrap{max-width:1120px;margin:-64px auto 40px;padding:0 20px}
+.cols{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:0 8px 24px #0b1b2b0d}
+.card.flat{box-shadow:none}
+label{display:block;font-size:13px;font-weight:600;color:#3d5167;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--bd);border-radius:10px;background:#f8fbfd;transition:border .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px #0fb5a62b;background:#fff}
+textarea{resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.notice{padding:12px 14px;border-radius:10px;background:#fff6e0;color:#7a5200;font-size:13px;margin:12px 0;border:1px solid #f6dc9c}
+.notice.success{background:#e7f8ef;color:#12633a;border-color:#b6e7cb}
+.notice.info{background:#eaf4fb;color:#1b4d78;border-color:#c5dff1}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:12px;margin-bottom:14px;font-size:14px}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:#e1f7f4;color:var(--teal-d);font-weight:800;display:grid;place-items:center;font-size:13px}
+
+/* tags */
+.tag{font-size:12px;font-weight:700;border-radius:30px;padding:3px 10px;white-space:nowrap;display:inline-block}
+.Pending{background:#fff1d6;color:#9a5d00}
+.Investigating{background:#dfeafd;color:#1a54b4}
+.Resolved{background:#dff5e9;color:#12703f}
+.Closed{background:#e9eef2;color:#52667a}
+.P-High{background:#fde3e0;color:#b3261c}.P-Medium{background:#fff1d6;color:#9a5d00}.P-Low{background:#e9eef2;color:#52667a}
+
+/* login drawer (side) */
+.overlay{position:fixed;inset:0;background:#06121e99;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:#fff;z-index:50;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-12px 0 40px #0006}
+.drawer.open{transform:none}
+.drawer-head{background:var(--ink);color:#fff;padding:28px 28px 24px}
+.drawer-head .logo{margin-bottom:14px;width:46px;height:46px;font-size:24px}
+.drawer-head p{margin:4px 0 0;color:#9db4c8;font-size:14px}
+.drawer-body{padding:8px 28px 28px;overflow:auto;flex:1}
+.close{position:absolute;top:14px;right:14px;background:#ffffff1a;border:0;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px}
+.pw{position:relative}.pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mu);font-size:12px;font-weight:700}
+.err{color:var(--er);font-size:13px;margin:10px 0 0;min-height:18px}
+
+/* admin shell */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 61px)}
+.side{background:var(--ink2);color:#cfe0ee;padding:22px 14px;display:flex;flex-direction:column;gap:6px}
+.side .who{padding:0 10px 16px;border-bottom:1px solid #ffffff1f;margin-bottom:10px}
+.side .who b{color:#fff;display:block}
+.side .who span{font-size:12.5px;color:#8fb0c9}
+.side button.nav{background:none;border:0;text-align:left;color:inherit;padding:11px 12px;border-radius:10px;font-weight:600;display:flex;gap:10px;align-items:center}
+.side button.nav:hover{background:#ffffff12}
+.side button.nav.active{background:var(--teal);color:#042b27}
+.side .spacer{flex:1}
+.main{padding:28px;max-width:1000px;width:100%}
+.main-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+.stat{padding:18px 20px;margin:0;border-left:5px solid var(--c,var(--teal))}
+.stat b{font-size:32px;display:block;line-height:1.1}
+.stat span{color:var(--mu);font-size:13px;font-weight:600}
+.bars .br{display:grid;grid-template-columns:130px 1fr 28px;gap:10px;align-items:center;margin:9px 0;font-size:13px}
+.bars .track{background:#edf2f6;border-radius:6px;height:10px;overflow:hidden}
+.bars .fill{height:100%;background:linear-gradient(90deg,var(--teal),#1c8fd0);border-radius:6px;transition:width .5s}
+.latest{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd);align-items:center}
+.latest:last-child{border:0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input{flex:1;min-width:180px}.toolbar select{width:auto}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--bd);font-size:13.5px}
+th{color:var(--mu);font-size:12px;font-weight:700;background:#f6f9fb}
+tr:hover td{background:#fafcfd}
+.timeline{border-left:3px solid #cfe9e6;margin:8px 0 0 6px;padding-left:18px}
+.timeline p{margin:0 0 12px;position:relative;font-size:14px}
+.timeline p::before{content:"";position:absolute;left:-25px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--teal);border:2px solid #fff}
+.empty{text-align:center;padding:30px 10px;color:var(--mu)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;z-index:80;max-width:90%;box-shadow:0 8px 28px #0005;font-weight:600}
+
+@media(max-width:860px){
+  .hero-in,.cols{grid-template-columns:1fr}
+  .shell{grid-template-columns:1fr}
+  .side{flex-direction:row;flex-wrap:wrap;padding:12px}
+  .side .who,.side .spacer{display:none}
+  .main{padding:18px}
+}
+@media(max-width:560px){.row{grid-template-columns:1fr}.topbar{padding:12px 16px}.hero{padding:36px 18px 90px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><div class="logo">🛡️</div><div>Cyber Crime Management System<small>Complaint registration &amp; case tracking</small></div></div>
+  <div id="topActions"><button class="btn ghost" id="openLogin" onclick="openLogin()">Admin login</button></div>
+</header>
+
+<!-- PUBLIC -->
+<section id="publicPage">
+  <div class="hero"><div class="hero-in">
+    <div>
+      <h1>Report a cyber crime. Follow it until it's resolved.</h1>
+      <p>Register your complaint in a few minutes, get a complaint ID, and check the status of your case at any time.</p>
+      <div class="hero-badges"><span class="chip">Phishing</span><span class="chip">Online fraud</span><span class="chip">Identity theft</span><span class="chip">Hacking</span><span class="chip">Cyber bullying</span></div>
+    </div>
+    <div class="helpline"><b>1930</b><span>National Cyber Crime Helpline (India). For financial fraud in progress, call immediately.</span></div>
+  </div></div>
+
+  <div class="wrap"><div class="cols">
+    <div class="card">
+      <h2>Register a complaint</h2>
+      <p class="muted">Fields marked * are required. Your complaint ID appears after you submit.</p>
+      <div class="notice">Demo project: complaints are saved in this browser only. Do not enter real sensitive information.</div>
+      <form id="complaintForm">
+        <label for="title">Complaint title *</label><input id="title" maxlength="100" required placeholder="e.g. UPI payment fraud">
+        <div class="row">
+          <div><label for="type">Crime type *</label>
+            <select id="type" required><option>Phishing</option><option>Online Fraud</option><option>Identity Theft</option><option>Hacking</option><option>Cyber Bullying</option><option>Ransomware</option><option>Data Breach</option><option>Social Media Crime</option><option>Other</option></select></div>
+          <div><label for="priority">Priority</label><select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+        </div>
+        <div class="row">
+          <div><label for="victim">Your name *</label><input id="victim" maxlength="80" required></div>
+          <div><label for="contact">Contact number *</label><input id="contact" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" required placeholder="10-digit mobile number"></div>
+        </div>
+        <label for="date">Incident date *</label><input id="date" type="date" required>
+        <label for="description">Describe what happened *</label>
+        <textarea id="description" rows="5" maxlength="3000" required placeholder="Include the platform, amount (if any) and what happened. Do not include passwords or OTPs."></textarea>
+        <div class="actions"><button class="btn" type="submit">Submit complaint</button><button class="btn secondary" type="reset">Clear form</button></div>
+      </form>
+      <div id="receipt" class="notice success hidden" aria-live="polite"></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Track your complaint</h2>
+        <p class="muted">Enter the complaint ID you received after submitting.</p>
+        <label for="trackId">Complaint ID</label><input id="trackId" placeholder="e.g. 1001">
+        <div class="actions"><button class="btn" type="button" onclick="trackComplaint()">Track complaint</button></div>
+        <div id="trackingResult" class="notice info hidden" aria-live="polite"></div>
+      </div>
+      <div class="card flat">
+        <h3>How it works</h3>
+        <ol class="steps" style="margin-top:14px">
+          <li>Fill in the complaint form and submit it.</li>
+          <li>Save your complaint ID.</li>
+          <li>An administrator assigns an officer and starts the investigation.</li>
+          <li>Track the status until the case is resolved.</li>
+        </ol>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ADMIN -->
+<section id="adminPage" class="hidden">
+  <div class="shell">
+    <aside class="side">
+      <div class="who"><b>Administrator</b><span>Cyber Crime Cell</span></div>
+      <button class="nav active" data-tab="dashboard" onclick="adminTab('dashboard')">📊 Dashboard</button>
+      <button class="nav" data-tab="cases" onclick="adminTab('cases')">📁 All complaints</button>
+      <button class="nav" data-tab="new" onclick="adminTab('new')">✍️ Register for a user</button>
+      <div class="spacer"></div>
+      <button class="nav" onclick="logout()">🚪 Log out</button>
+    </aside>
+    <main class="main" id="adminContent"></main>
+  </div>
+</section>
+
+<!-- LOGIN SIDE DRAWER -->
+<div class="overlay" id="overlay" onclick="closeLogin()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="loginTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <button class="close" onclick="closeLogin()" aria-label="Close login">✕</button>
+    <div class="logo">🔐</div>
+    <h2 id="loginTitle" style="color:#fff;margin:0">Admin login</h2>
+    <p>Sign in to manage complaints and cases.</p>
+  </div>
+  <div class="drawer-body">
+    <div class="notice info">Demo credentials: <b>admin</b> / <b>admin123</b></div>
+    <label for="username">Username</label><input id="username" value="admin" autocomplete="username">
+    <label for="password">Password</label>
+    <div class="pw"><input id="password" type="password" placeholder="Enter password" autocomplete="current-password"><button type="button" onclick="togglePw()" id="pwBtn">Show</button></div>
+    <p class="err" id="loginError" role="alert"></p>
+    <div class="actions"><button class="btn" onclick="login()" style="flex:1">Sign in</button><button class="btn secondary" onclick="closeLogin()">Cancel</button></div>
+  </div>
+</aside>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+const STORAGE_KEY='ccms_cases_v2';
+const TYPES=['Phishing','Online Fraud','Identity Theft','Hacking','Cyber Bullying','Ransomware','Data Breach','Social Media Crime','Other'];
+const OFFICERS=['Unassigned','Insp. R. Negi','SI A. Bisht','SI P. Kala','Insp. S. Rawat'];
+const STATUSES=['Pending','Investigating','Resolved','Closed'];
+let cases=[],filter={q:'',s:'All'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+function loadCases(){try{cases=JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}catch(e){cases=[]}}
+function saveCases(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(cases))}catch(e){}}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),2600)}
+
+/* login drawer */
+function openLogin(){$('overlay').classList.add('open');$('drawer').classList.add('open');$('drawer').setAttribute('aria-hidden','false');$('loginError').textContent='';setTimeout(()=>$('password').focus(),300)}
+function closeLogin(){$('overlay').classList.remove('open');$('drawer').classList.remove('open');$('drawer').setAttribute('aria-hidden','true')}
+function togglePw(){const p=$('password'),show=p.type==='password';p.type=show?'text':'password';$('pwBtn').textContent=show?'Hide':'Show'}
+function login(){
+  if($('username').value.trim()==='admin'&&$('password').value==='admin123'){
+    closeLogin();$('publicPage').classList.add('hidden');$('adminPage').classList.remove('hidden');
+    $('topActions').innerHTML='<span class="chip">Signed in as admin</span>';
+    adminTab('dashboard');toast('Welcome back, admin');
+  }else $('loginError').textContent='Incorrect username or password. Try admin / admin123.';
+}
+function logout(){
+  $('adminPage').classList.add('hidden');$('publicPage').classList.remove('hidden');$('password').value='';
+  $('topActions').innerHTML='<button class="btn ghost" onclick="openLogin()">Admin login</button>';window.scrollTo(0,0);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeLogin();
+  if(e.key==='Enter'&&$('drawer').classList.contains('open'))login();
+});
+
+/* complaints */
+function nextId(){return Math.max(1000,...cases.map(c=>Number(c.id)||0))+1}
+function addComplaint(d){
+  const c={id:nextId(),...d,status:'Pending',officer:'Unassigned',createdAt:new Date().toISOString(),notes:['Complaint registered']};
+  cases.push(c);saveCases();return c;
+}
+$('complaintForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const contact=$('contact').value.trim();
+  if(!/^\d{10}$/.test(contact)){toast('Enter a valid 10-digit contact number');return}
+  const c=addComplaint({title:$('title').value.trim(),type:$('type').value,victim:$('victim').value.trim(),contact,date:$('date').value,priority:$('priority').value,desc:$('description').value.trim()});
+  $('receipt').innerHTML=`<b>Complaint registered successfully.</b><br>Your complaint ID is <b>#${c.id}</b>. Status: Pending. Save this ID to track your case.`;
+  $('receipt').classList.remove('hidden');$('complaintForm').reset();$('date').value=today();
+  $('receipt').scrollIntoView({behavior:'smooth',block:'center'});
+});
+function trackComplaint(){
+  const id=$('trackId').value.trim().replace('#',''),c=cases.find(x=>String(x.id)===id),el=$('trackingResult');
+  el.classList.remove('hidden');
+  el.innerHTML=c?`<b>Complaint #${c.id}</b><br>${esc(c.title)}<br>Status: <span class="tag ${esc(c.status)}">${esc(c.status)}</span><br>Assigned officer: ${esc(c.officer)}<br>Submitted by: ${esc(c.victim)}`:'No complaint found with that ID in this browser. Check the number and try again.';
+}
+
+/* admin */
+function adminTab(tab){document.querySelectorAll('.side .nav[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));renderAdmin(tab)}
+function tagP(p){return `<span class="tag P-${esc(p)}">${esc(p)}</span>`}
+function renderAdmin(tab){
+  const el=$('adminContent');
+  if(tab==='dashboard'){
+    const n=s=>cases.filter(c=>c.status===s).length;
+    const byType=TYPES.map(t=>[t,cases.filter(c=>c.type===t).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+    const max=Math.max(1,...byType.map(x=>x[1]));
+    el.innerHTML=`<div class="main-head"><div><h2>Dashboard</h2><p class="muted" style="margin:0">Overview of all registered complaints</p></div></div>
+    <div class="grid">
+      <div class="card stat"><b>${cases.length}</b><span>Total complaints</span></div>
+      <div class="card stat" style="--c:var(--wa)"><b>${n('Pending')}</b><span>Pending</span></div>
+      <div class="card stat" style="--c:var(--pr)"><b>${n('Investigating')}</b><span>Investigating</span></div>
+      <div class="card stat" style="--c:var(--ok)"><b>${n('Resolved')+n('Closed')}</b><span>Resolved / Closed</span></div>
+    </div>
+    ${cases.length?`<div class="cols" style="grid-template-columns:1fr 1fr">
+      <div class="card bars"><h3>Complaints by crime type</h3>${byType.map(([t,v])=>`<div class="br"><span>${esc(t)}</span><div class="track"><div class="fill" style="width:${v/max*100}%"></div></div><b>${v}</b></div>`).join('')}</div>
+      <div class="card"><h3>Latest complaints</h3>${cases.slice().reverse().slice(0,5).map(c=>`<div class="latest"><div><b>#${c.id} ${esc(c.title)}</b><div class="muted">${esc(c.victim)}</div></div><span class="tag ${esc(c.status)}">${esc(c.status)}</span></div>`).join('')}</div>
+    </div>`:`<div class="card empty"><h3>No complaints yet</h3><p>Register a complaint from the public page, or load a few sample complaints to try the dashboard.</p><div class="actions" style="justify-content:center"><button class="btn" onclick="loadSample()">Load sample complaints</button></div></div>`}`;
+  }else if(tab==='cases'){
+    const list=cases.filter(c=>(filter.s==='All'||c.status===filter.s)&&(`${c.id} ${c.title} ${c.victim} ${c.type}`.toLowerCase().includes(filter.q.toLowerCase())));
+    el.innerHTML=`<div class="main-head"><div><h2>All complaints</h2><p class="muted" style="margin:0">${list.length} of ${cases.length} shown</p></div><button class="btn secondary" onclick="exportCSV()">Export CSV</button></div>
+    <div class="card"><div class="toolbar"><input id="fq" placeholder="Search by ID, title, name or type" value="${esc(filter.q)}"><select id="fs"><option>All</option>${STATUSES.map(s=>`<option ${s===filter.s?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Title</th><th>Type</th><th>Complainant</th><th>Date</th><th>Priority</th><th>Status</th><th></th></tr></thead><tbody>${list.map(c=>`<tr><td><b>#${c.id}</b></td><td>${esc(c.title)}</td><td>${esc(c.type)}</td><td>${esc(c.victim)}</td><td>${esc(c.date)}</td><td>${tagP(c.priority)}</td><td><span class="tag ${esc(c.status)}">${esc(c.status)}</span></td><td><button class="btn small" onclick="viewCase(${c.id})">Open</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No complaints match your search.</td></tr>'}</tbody></table></div></div>`;
+    $('fq').addEventListener('input',e=>{filter.q=e.target.value;const p=e.target.selectionStart;renderAdmin('cases');const f=$('fq');f.focus();f.setSelectionRange(p,p)});
+    $('fs').addEventListener('change',e=>{filter.s=e.target.value;renderAdmin('cases')});
+  }else{
+    el.innerHTML=`<div class="main-head"><div><h2>Register for a user</h2><p class="muted" style="margin:0">Create a complaint on behalf of a person who contacted you directly</p></div></div>
+    <div class="card" style="max-width:700px"><form id="adminForm"><label>Complaint title *</label><input name="title" required>
+    <div class="row"><div><label>Crime type</label><select name="type">${TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div><div><label>Priority</label><select name="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div></div>
+    <div class="row"><div><label>Complainant name *</label><input name="victim" required></div><div><label>Contact number *</label><input name="contact" pattern="[0-9]{10}" maxlength="10" required></div></div>
+    <label>Incident date *</label><input name="date" type="date" value="${today()}" required>
+    <label>Description *</label><textarea name="desc" rows="4" required></textarea>
+    <div class="actions"><button class="btn">Register complaint</button></div></form></div>`;
+    $('adminForm').addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));if(!/^\d{10}$/.test(d.contact)){toast('Enter a valid 10-digit contact number');return}const c=addComplaint(d);toast('Complaint #'+c.id+' registered');adminTab('cases')});
+  }
+}
+function viewCase(id){
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  $('adminContent').innerHTML=`<div class="main-head"><div><h2>Complaint #${c.id}</h2><p class="muted" style="margin:0">${esc(c.title)}</p></div><button class="btn secondary" onclick="adminTab('cases')">← Back to list</button></div>
+  <div class="card"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><span class="tag ${esc(c.status)}">${esc(c.status)}</span>${tagP(c.priority)}<span class="tag Closed">${esc(c.type)}</span></div>
+  <p><b>Complainant:</b> ${esc(c.victim)} (${esc(c.contact)})<br><b>Incident date:</b> ${esc(c.date)}</p><p><b>Description</b><br>${esc(c.desc)}</p>
+  <div class="row"><div><label>Status</label><select id="caseStatus">${STATUSES.map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}</select></div><div><label>Assigned officer</label><select id="caseOfficer">${OFFICERS.map(s=>`<option ${s===c.officer?'selected':''}>${s}</option>`).join('')}</select></div></div>
+  <div class="actions"><button class="btn" onclick="updateCase(${c.id})">Save changes</button><button class="btn danger" onclick="deleteCase(${c.id})">Delete complaint</button></div></div>
+  <div class="card"><h3>Investigation timeline</h3><div class="timeline" style="margin-top:14px">${c.notes.map(n=>`<p>${esc(n)}</p>`).join('')}</div>
+  <label for="caseNote">Add note</label><textarea id="caseNote" rows="3"></textarea><div class="actions"><button class="btn secondary" onclick="addNote(${c.id})">Add note</button></div></div>`;
+}
+function updateCase(id){const c=cases.find(x=>x.id===id);c.status=$('caseStatus').value;c.officer=$('caseOfficer').value;c.notes.push(`Updated: status ${c.status}; officer ${c.officer}`);saveCases();toast('Complaint updated');viewCase(id)}
+function addNote(id){const c=cases.find(x=>x.id===id),n=$('caseNote').value.trim();if(!n)return;c.notes.push(n);saveCases();viewCase(id)}
+function deleteCase(id){if(confirm('Delete this complaint permanently?')){cases=cases.filter(c=>c.id!==id);saveCases();toast('Complaint deleted');adminTab('cases')}}
+function exportCSV(){
+  const h=['ID','Title','Type','Complainant','Contact','Date','Priority','Status','Officer','Description'];
+  const rows=cases.map(c=>[c.id,c.title,c.type,c.victim,c.contact,c.date,c.priority,c.status,c.officer,c.desc]);
+  const csv=[h,...rows].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='cyber-crime-complaints.csv';a.click();URL.revokeObjectURL(a.href);
+}
+function loadSample(){
+  [['UPI payment fraud','Online Fraud','Rahul Sharma','High','Received a fake refund link and lost money through UPI.'],
+   ['Fake bank SMS','Phishing','Neha Rawat','Medium','Got an SMS asking to update KYC and entered card details on a fake site.'],
+   ['Instagram account hacked','Social Media Crime','Amit Negi','Low','Account taken over and messages sent to followers.'],
+   ['Harassing messages','Cyber Bullying','Priya Bisht','High','Repeated abusive messages from an unknown profile.']
+  ].forEach((s,i)=>{const c=addComplaint({title:s[0],type:s[1],victim:s[2],contact:'98765432'+(10+i),date:today(),priority:s[3],desc:s[4]});if(i===1){c.status='Investigating';c.officer='SI P. Kala'}if(i===2){c.status='Resolved';c.officer='SI A. Bisht'}});
+  saveCases();toast('Sample complaints loaded');adminTab('dashboard');
+}
+loadCases();$('date').value=today();
+</script>
+</body>
+</html>
